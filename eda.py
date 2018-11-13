@@ -33,10 +33,13 @@ def display_topics(model, feature_names, num_top_words):
         print(" ".join([feature_names[i]
                         for i in topic.argsort()[:-num_top_words - 1:-1]]))
 
-def plot_new_ibu(data):
-    ibu = data['ibu']
+def plot_new_ibu(new_data, old_data):
+    ibu_new = new_data['ibu']
     fig, ax = plt.subplots(figsize=(6,6))
-    ibu.plot(kind='hist')
+    ibu_new.hist(bins=50, label='New')
+    old_data.hist(bins=50, label='Old')
+    ax.set_title('New IBU values vs. Old IBU values')
+    ax.set_xlabel('IBU')
     plt.show()
 
 
@@ -44,28 +47,19 @@ if __name__ == '__main__':
     # Load clean data
     data = pd.read_csv('craft-cans/clean.csv')
     data.drop('Unnamed: 0', axis=1, inplace=True)
-    # First basic plot
-    plot_abv_ibu(data)
-    # Find AVG IBU by style of beer
-    avg_ibu_by_style = []
-    scope = data['style'].unique()
-    for beer in scope:
-        avg_ibu = data[data['style']==beer]['ibu'].mean()
-        avg_ibu_by_style.append(avg_ibu)
 
-    # Add Column with avg_ibu to associated missing ibu
-    # data['avg_ibu'] = 0
-    # for beer in data:
-    #     scope = data['style'].unique()
-    #     for beer_style in scope:
-    #         avg_ibu = data[data['style']==beer_style]['ibu'].mean()
-    #         if beer_style == beer['style']:
-    #             beer['avg_ibu'] = avg_ibu
-    #         if beer['ibu'].isnull():
-    #             beer['ibu'] = beer['avg_ibu']
+    # basic plots
+    plot_abv_ibu(data)
     missing = data.isnull().sum()
-    # plot_missing_values(missing)
+    plot_missing_values(missing)
+    # drop rows with NaN value in ibu and abv column
+    data.dropna(subset=['abv', 'ibu'], how='all', inplace=True)
     new_cols = impute_df(data[['abv','ibu']], KNN(k=3))
+    plot_new_ibu(new_cols, data['ibu'])
+    # Replace columns
+    data['abv'] = new_cols['abv']
+    data['ibu'] = new_cols['ibu']
+
     vectorizer = CountVectorizer(max_features=150, stop_words='english')
     dtm = vectorizer.fit_transform(data['beer_name'])
     features = vectorizer.get_feature_names()
@@ -76,4 +70,5 @@ if __name__ == '__main__':
     # find top ten features/words
     # num_top_words = 10
     # display_topics(lda, features, num_top_words)
-    plot_new_ibu(new_cols)
+
+    data.to_csv('craft-cans/cleaner.csv')

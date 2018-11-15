@@ -9,7 +9,10 @@ from sklearn.model_selection import GridSearchCV, train_test_split
 
 # pd.options.display.max_columns = 30
 
-stop_words = ENGLISH_STOP_WORDS.union({'brewery','company','brewing','house','bock','style','scotch','california','oktoberfest','wee','special','english','american','hefeweizen','old','common','gose'})
+stop_words = ENGLISH_STOP_WORDS.union({'king','german','brau','james',\
+'brewery','company','brewing','house','bock','style','scotch','california','oktoberfest',\
+'wee','special','english','american','hefeweizen','old','common','gose'})
+
 scaler = StandardScaler()
 
 class TopicModeler(object):
@@ -33,22 +36,16 @@ class TopicModeler(object):
         self.other_features = None
 
     def set_feature_names(self):
-        """
-        Sets feature names from vectorizer
-        """
+        """Sets feature names from vectorizer"""
         self.feature_names = np.array(self.vectorizer.get_feature_names())
 
     def vectorize(self):
-        """
-        Vectorizes corpus
-        """
+        """Vectorizes corpus"""
         print('Vectorizing...')
         return self.vectorizer.fit_transform(self.text)
 
     def fit(self, text, names=None):
-        """
-        Vectorizes corpus and fits model with it. Beers names are set here as well
-        """
+        """Vectorizes corpus and fits model with it. Beers names are set here as well"""
         self.text = text
         self.word_vec = self.vectorize()
         print('Fitting...')
@@ -56,19 +53,15 @@ class TopicModeler(object):
         self.set_feature_names()
         self.names = names
 
-    def top_topic_features(self, num_features=7):
-        """
-        Takes the n most important features for each topic and indexes against the vectorizer to return the labels associated with those features.
-        """
+    def top_topic_features(self, num_features=6):
+        """Takes the n most important features for each topic and indexes against the vectorizer to return the labels associated with those features."""
         # Argsort along rows, reverse the order of the rows, then take all rows up to the number of features
         sorted_topics = self.model.components_.argsort(axis=1)[:, ::-1][:, :num_features]
         # Index the feature names based on the indices of the top most important features
         return self.feature_names[sorted_topics]
 
     def predict_proba(self, text):
-        """
-        Vectorizes and transforms text to give the topic probabilities for each document
-        """
+        """Vectorizes and transforms text to give the topic probabilities for each document"""
         # Convert single document to iterable
         if type(text) == str:
             text = [text]
@@ -76,16 +69,12 @@ class TopicModeler(object):
         return self.model.transform(vec_text)
 
     def get_more_features(self, df):
-        """
-        Adds two feature columns (abv and ibu values) from beer dataframe
-        """
+        """Adds two feature columns (abv and ibu values) from beer dataframe"""
         self.other_features = df[['abv','ibu']]
         return self.other_features
 
     def sort_by_distance(self, doc_index, doc_probs):
-        """
-        Finds indices of closest (most similar) beers based on document by probability array
-        """
+        """Finds indices of closest (most similar) beers based on document by probability array"""
         vectors = np.column_stack((doc_probs, self.other_features)) # Append other features to doc_probs with a column_stack
         doc_probs = scaler.fit_transform(vectors)
         # doc_probs = doc_probs[:,-2:] * 2 # weigh features that are more important than others
@@ -93,16 +82,12 @@ class TopicModeler(object):
         return distances.argsort()
 
     def find_closest_document_titles(self, sorted_indices, num_documents=10):
-        """
-        Returns the document beer names of most similar documents. Used for internal dataset.
-        """
+        """Returns the document beer names of most similar documents. Used for internal dataset."""
         name_array = self.names.iloc[sorted_indices.ravel()][:num_documents]
         return {name_array.iloc[0]: name_array.iloc[1:].tolist()}
 
     def find_closest_beer_names(self, target_beer, sorted_indices, num_documents=10):
-        """
-        Returns beer names that are most similar to a suggested beer
-        """
+        """Returns beer names that are most similar to a suggested beer"""
         name_array = self.names.iloc[sorted_indices.ravel()][:num_documents]
         return {
             'target_beer': target_beer,
@@ -110,24 +95,18 @@ class TopicModeler(object):
         }
 
     def find_beer_idx(self, beer_name):
-        """
-        Returns beer name
-        """
+        """Returns beer name"""
         return self.names[self.names == beer_name].index[0]
 
     def top_closest_beers(self, beer_name, num_documents=10):
-        """
-        Returns most similar articles given article title
-        """
+        """Returns most similar articles given article title"""
         doc_index = self.find_beer_idx(beer_name)
         doc_probs = self.predict_proba(self.text)
         beer_similarities = self.sort_by_distance(doc_index, doc_probs)
         return self.find_closest_document_titles(beer_similarities, num_documents)
 
     def recommend(self, user_input_data):
-        """
-        Takes in a users input data that pipelines thru the process of fit -> transform -> recommend
-        """
+        """Takes in a users input data that pipelines thru the process of fit -> transform -> recommend"""
         text = user_input_data['beer_name'] + ' ' + user_input_data['style']
         vectorize_text = self.vectorizer.transform(text.split('  '))
         input_doc_probs = self.model.transform(vectorize_text)
@@ -144,9 +123,7 @@ class TopicModeler(object):
         return self.find_closest_beer_names(user_input_data['beer_name'],sorted_distances,10)
 
     def grid_search_lda(self, params):
-        """
-        Performs grid search optimizing log-loss using topic model
-        """
+        """Performs grid search optimizing log-loss using topic model"""
         # Create holdout set to check log loss on unseen data
         X_train, X_test = train_test_split(self.word_vec, test_size=0.25)
         lda_cv = GridSearchCV(self.model, param_grid=params, n_jobs=-1,  verbose=1)
@@ -157,33 +134,23 @@ class TopicModeler(object):
         return lda_cv
 
     def load_model(self, filepath):
-        """
-        Load topic model object
-        """
+        """Load topic model object"""
         self.model = joblib.load(filepath)
 
     def load_vectorizer(self, filepath):
-        """
-        Load vectorizer object
-        """
+        """Load vectorizer object"""
         self.tf_vectorizer = joblib.load(filepath)
 
     def save_model(self, filepath):
-        """
-        Save topic model object
-        """
+        """Save topic model object"""
         joblib.dump(self.model, filepath)
 
     def save_vectorizer(self, filepath):
-        """
-        Save vectorizer object
-        """
+        """Save vectorizer object"""
         joblib.dump(self.vectorizer, filepath)
 
 def load_data():
-    """
-    Loads data
-    """
+    """Loads data"""
     df = pd.read_csv('craft-cans/cleaner.csv')
     df.drop('Unnamed: 0',axis=1,inplace=True)
     df = df.dropna()
@@ -191,9 +158,7 @@ def load_data():
     return df
 
 def handle_input(fav_beer, fav_style, abv_pref, ibu_pref):
-    """
-    Takes a users preference of beer
-    """
+    """Takes a users preference of beer"""
     return {
             'beer_name':fav_beer,
             'style':fav_style,
@@ -203,11 +168,12 @@ def handle_input(fav_beer, fav_style, abv_pref, ibu_pref):
 
 def main():
     df = load_data() #add this make a sample .sample(100).reset_index(drop=True)
-    lda = LatentDirichletAllocation(n_components=8, learning_offset=50., verbose=1,
-                                    doc_topic_prior=0.25, topic_word_prior=0.5, n_jobs=-1, learning_method='online')
-    tf_vectorizer = CountVectorizer(max_df=0.85, min_df=2, max_features=1000, stop_words=stop_words)
-    tm = TopicModeler(lda, tf_vectorizer, euclidean_distances)
-    tm.fit(df['beer_name'] + ' ' +  df['style'] + ' ' + df['brewery_name'], names=df['beer_name'])
+    # best params so far: n_components=7, doc_topic_prior=1/8, topic_word_prior=0.4
+    lda = LatentDirichletAllocation(n_components=7, learning_offset=50., verbose=1,
+                                    doc_topic_prior=1/8, topic_word_prior=0.4, n_jobs=-1, learning_method='online')
+    tf_vectorizer = CountVectorizer(max_df=0.85, min_df=2, max_features=850, stop_words=stop_words)
+    tm = TopicModeler(lda, tf_vectorizer)
+    tm.fit(df['beer_name'] + ' ' +  df['style'], names=df['beer_name'])
     tm.get_more_features(df)
     print(tm.top_topic_features())
 

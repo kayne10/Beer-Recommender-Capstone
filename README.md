@@ -5,27 +5,25 @@
 ## EDA
 
 
+
+
 ## LDA Results
 
-(Elbow Plot?)
-
-| Topic Number     | Topics | Possible Category |
-| ---      | ---       |
-| 0 |'ale' 'pale' 'apa' 'amber' 'red' 'blonde' 'brown' 'wheat' 'saison' 'farmhouse'                 | APAs |
-| 1 |'ipa' 'double' 'imperial' 'hop' 'esb' 'bitter' 'extra' 'strong' 'belgian' 'session'                | IPAs |
-| 2 |'porter' 'baltic' 'coconut' 'doppelbock' 'vanilla' 'robust' 'plum' 'chocolate' 'java' 'voodoo'| Porters |
-| 3 |'pilsner' 'pilsener' 'german' 'czech' 'pils' 'barrel' 'grand' 'brew' 'golden' 'canyon'| Pilsners |
-| 4 |'white' 'witbier' 'märzen' 'wit' 'lager' 'house' 'king' 'street' 'bier' 'cold'| ? |
-| 5 |'belgian' 'stout' 'helles' 'oatmeal' 'black' 'light' 'munich' 'vienna' 'adjunct' 'milk'| Stouts|
-| 6 |'kölsch' 'winter' 'warmer' 'tripel' 'berliner' 'weissbier' 'island''shandy' 'summer' 'kentucky'| ? |
-| 7 |'beer' 'fruit' 'vegetable' 'rye' 'cream' 'pumpkin' 'wheat' 'great''spiced' 'herbed' | ? |
-| 8 |'cider' 'altbier' 'gold' 'apple' 'hard' 'dry' 'jack' 'ginger' 'miner' 'angry'| Ciders |
+| Topic Number | Topics | Possible Category |
+| --- | --- | --- |
+| 0 |'ipa' 'double' 'imperial' 'black' 'kölsch' 'hop' | IPAs |
+| 1 |'porter' 'altbier' 'imperial' 'russian' 'barrel' 'baltic'| Porters |
+| 2 |'stout' 'oatmeal' 'winter' 'warmer' 'milk' 'sweet'| Stouts |
+| 3 |'beer' 'pilsner' 'pilsener' 'rye' 'fruit' 'vegetable'| Pilsners |
+| 4 |'ale' 'pale' 'lager' 'apa' 'amber' 'red'| APAs |
+| 5 |'cider' 'berliner' 'apple' 'weissbier' 'hard' 'dry'| Ciders |
+| 6 |'ale' 'blonde' 'witbier' 'strong' 'belgian' 'golden'|  Golden/Blondes |
 
 ## Input/Output Vectors
 
 | Topic probabilities | ABU | IBU|
-| --- | ---| --- |
-| | | |
+| --- | --- | --- |
+|[0.01820796, 0.41002485, 0.01818473, 0.01818347, 0.01818821,0.01818524, 0.49902553]|1.21|0.62|
 |... |... |... |
 
 ## Example
@@ -37,7 +35,28 @@ Recommendation of Beer within Dataset
 
 Recommendation for User's preference
 ```
-{'target_beer': 'Voodoo Ranger Imperial IPA', 'recommendations': ['Long Hammer IPA', 'Long Hammer IPA', 'Colorado Red Ale', 'Manzanita Pale Ale', 'Pine Belt Pale Ale', 'Rebel IPA', 'Fremont Summer Ale', 'Pine Belt Pale Ale', 'Belgorado', 'Pretzel Stout']}
+{'target_beer': 'Voodoo Ranger Imperial IPA', 'recommendations': ['Valkyrie Double IPA', 'Northern Lights India Pale Ale', 'Northern Lights India Pale Ale', 'Jockamo IPA', 'White Reaper', 'Humidor Series India Pale Ale', 'Jai Alai IPA', 'Jai Alai IPA Aged on White Oak', 'The Great Return', 'Upslope Christmas Ale']}
 ```
+
+Input
+
+| Beer | ABV | IBU | Style |
+| --- | --- | --- | --- |
+| Voodoo Ranger Imperial IPA | 0.09 | 90 | Imperial IPA |
+
+Recommendations
+
+| Beer | ABV | IBU | Style |
+| --- | --- | --- | --- |
+| Valkyrie Double IPA | 0.092 | 100.0 | American IPA |
+| Northern Lights India Pale Ale | 0.065 | 52.0| American IPA |
+| Jockamo IPA | 0.065 | 52.0 | American IPA |
+| White Reaper | 0.07 | 61.0 | Belgian IPA |
+| Jai Alai IPA Aged on White Oak | 0.075 | 70.0 | American IPA |
+| Humidor Series India Pale Ale | 0.075 | 70.0 | American IPA |
+| The Great Return | 0.075 | 70.0 | American IPA|
+| Jai Alai IPA | 0.075 | 70.0 | American IPA |
+| Tripel Deke | 0.082 | 81.67 | Tripel |
+
 
 ## Demo

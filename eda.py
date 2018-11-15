@@ -15,13 +15,14 @@ def plot_abv_ibu(data):
     ax.set_title('Hopness vs. Alcohol Percent by Volume')
     ax.set_ylabel('IBU')
     ax.set_xlabel('ABV')
-    plt.show()
+    plt.savefig('images/scatter.png')
 
 
 def plot_missing_values(data):
     fig, ax = plt.subplots(figsize=(6,6))
     data.plot(kind='bar')
-    plt.show()
+    ax.set_title('Missing Values')
+    plt.savefig('images/missing_values.png')
 
 def impute_df(df, algorithm):
     """Returns completed dataframe given an imputation algorithm"""
@@ -40,7 +41,7 @@ def plot_new_ibu(new_data, old_data):
     old_data.hist(bins=50, label='Old')
     ax.set_title('New IBU values vs. Old IBU values')
     ax.set_xlabel('IBU')
-    plt.show()
+    plt.savefig('images/post_impute.png')
 
 
 if __name__ == '__main__':
@@ -72,3 +73,4 @@ if __name__ == '__main__':
     # display_topics(lda, features, num_top_words)
 
     data.to_csv('craft-cans/cleaner.csv')
+    plt.show()

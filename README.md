@@ -26,8 +26,18 @@
 | Topic probabilities | ABU | IBU|
 | --- | ---| --- |
 | | | |
+|... |... |... |
 
 ## Example
+
+Recommendation of Beer within Dataset
 ```
 {'Hard Apple': ['Ginger Cider', "Wolfman's Berliner", 'Schilling Hard Cider', 'Hard Cider', 'Nomader Weiss', 'Monkey Chased the Weasel', 'Magic Apple', 'Contemplation', 'Totally Radler']}
 ```
+
+Recommendation for User's preference
+```
+{'target_beer': 'Voodoo Ranger Imperial IPA', 'recommendations': ['Long Hammer IPA', 'Long Hammer IPA', 'Colorado Red Ale', 'Manzanita Pale Ale', 'Pine Belt Pale Ale', 'Rebel IPA', 'Fremont Summer Ale', 'Pine Belt Pale Ale', 'Belgorado', 'Pretzel Stout']}
+```
+
+## Demo

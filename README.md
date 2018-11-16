@@ -1,5 +1,9 @@
 # Beer Recommender by Troy Kayne
-<!-- Add a summary if necessary -->
+
+## Overview
+
+I found this dataset on kaggle that contained around 2500 different beers and about 500 different breweries. Then, this idea hit me.. I thought it would be a fun idea to come up with a recommendation system for beer. People love discovering a new beer.
+
 ## EDA
 
 When observing my data, I initially observed the correlation between IBU and ABV values. Normally, a heavier beer has more hop. This linear correlation made sense to me. However, you can see that it would be difficult to hard cluster this data by beer category.

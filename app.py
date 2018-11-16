@@ -17,6 +17,7 @@ def home():
 def predict():
     # user_preference = request.json
     user_preference = request.form.to_dict(flat=True)
+    # edit abv value to be a decimal
     tm.fit(df['beer_name'] + ' ' + df['style'], names=df['beer_name'])
     tm.get_more_features(df)
     prediction = tm.recommend(user_preference)

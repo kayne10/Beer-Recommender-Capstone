@@ -1,7 +1,5 @@
 # Beer Recommender by Troy Kayne
-
-## Summary
-
+<!-- Add a summary if necessary -->
 ## EDA
 
 When observing my data, I initially observed the correlation between IBU and ABV values. Normally, a heavier beer has more hop. This linear correlation made sense to me. However, you can see that it would be difficult to hard cluster this data by beer category.
@@ -102,3 +100,6 @@ Recommendations
 
 
 ## Demo
+run `app.py`
+
+Visit http://localhost:8080

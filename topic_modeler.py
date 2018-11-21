@@ -112,12 +112,12 @@ class TopicModeler(object):
         input_doc_probs = self.model.transform(vectorize_text)
         beer_features = np.column_stack((user_input_data['abv'], user_input_data['ibu']))
         input_vector = np.column_stack((input_doc_probs, beer_features))
-        input_vector = scaler.fit_transform(input_doc_probs)
-        input_vector = input_doc_probs[:,-2:] * 2 # weigh the abv and ibu values more than the topic probabilities
         all_doc_probs = self.predict_proba(self.text)
         all_doc_vectors = np.column_stack((all_doc_probs, self.other_features))
         all_doc_vectors = scaler.fit_transform(all_doc_vectors)
-        all_doc_vectors = all_doc_vectors[:,-2:] * 2
+        input_vector = scaler.transform(input_vector)
+        # input_vector = input_doc_probs[:,-2:] * 2
+        # all_doc_vectors = all_doc_vectors[:,-2:] * 2
         distances = self.distance_func(input_vector, all_doc_vectors)
         sorted_distances = np.argsort(distances)
         return self.find_closest_beer_names(user_input_data['beer_name'],sorted_distances,10)

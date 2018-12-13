@@ -6,6 +6,8 @@ from sklearn.externals import joblib
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS, CountVectorizer
 from sklearn.metrics.pairwise import cosine_distances, euclidean_distances
 from sklearn.model_selection import GridSearchCV, train_test_split
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
 
 # pd.options.display.max_columns = 30
 
@@ -171,14 +173,15 @@ def main():
     # best params so far: n_components=7, doc_topic_prior=1/8, topic_word_prior=0.4
     lda = LatentDirichletAllocation(n_components=7, learning_offset=50., verbose=1,
                                     doc_topic_prior=1/8, topic_word_prior=0.4, n_jobs=-1, learning_method='online')
-    tf_vectorizer = CountVectorizer(max_df=0.85, min_df=2, max_features=850, stop_words=stop_words)
+    tf_vectorizer = CountVectorizer(max_df=0.85, min_df=2, max_features=1000, stop_words=stop_words)
+
     tm = TopicModeler(lda, tf_vectorizer)
     tm.fit(df['beer_name'] + ' ' +  df['style'], names=df['beer_name'])
     tm.get_more_features(df)
     print(tm.top_topic_features())
 
     user_preference = handle_input('Voodoo Ranger Imperial IPA','Imperial IPA',0.09,70.0)
-    # print(tm.recommend(user_preference))
+    print(tm.recommend(user_preference))
 
     print(tm.top_closest_beers(df.beer_name.iloc[17],10)) # imperial ipa
     print(tm.top_closest_beers(df.beer_name.iloc[1090],10)) # cider
@@ -194,8 +197,9 @@ def main():
     # joblib.dump(grid_search, 'grid_search.joblib')
     # A grid search across many values yielded these values for optimizing log loss:
     # {'doc_topic_prior': 0.25, 'n_components': 5, 'topic_word_prior': 0.5}
-    tm.save_vectorizer('vectorizer.pkl')
-    tm.save_model('model.pkl')
+
+    # tm.save_vectorizer('vectorizer.pkl')
+    # tm.save_model('model.pkl')
 
 if __name__ == '__main__':
     main()

@@ -12,7 +12,7 @@ from sklearn.decomposition import RandomizedPCA, PCA
 from sklearn.pipeline import Pipeline
 import matplotlib.pyplot as plt
 import seaborn as sns
-from topic_modeler import load_data, handle_input
+from src.topic_modeler import load_data, handle_input
 
 sns.set()
 
@@ -25,7 +25,6 @@ stop_words = ENGLISH_STOP_WORDS.union({'king','german','brau','james',\
 'wee','special','english','american','hefeweizen','old','common','gose','NUM'})
 
 scaler = StandardScaler()
-
 
 def find_closest_beer_names(target_beer, df, sorted_indices, num_documents=10):
     """Returns beer names that are most similar to a suggested beer"""
@@ -58,7 +57,7 @@ def recommend_beer(user_input, df, vectorizer, dim_reducer, model):
 
     distances = cosine_distances(input_vector, all_doc_vectors)
     sorted_indices = np.argsort(distances)
-    return find_closest_beer_names(user_input['beer_name'],df,sorted_indices,10)
+    return find_closest_beer_names(user_input['beer_name'],df,sorted_indices,15)
 
 def plot_elbow(km,X):
     Sum_of_squared_distances = []
@@ -100,6 +99,7 @@ if __name__ == '__main__':
     n_clusters = 7
     km = KMeans(n_clusters=n_clusters)
 
+    # fit vectorizer and models
     matrix = tf_vectorizer.fit_transform(df['beer_name'] + ' ' + df['style'])
     X2 = pca.fit_transform(matrix.toarray())
     km.fit(X2)
@@ -127,3 +127,9 @@ if __name__ == '__main__':
 
     user_preference = handle_input('Voodoo Ranger Imperial IPA','Imperial IPA',0.09,70.0)
     recs = recommend_beer(user_preference,df,tf_vectorizer,pca,km)
+    print(recs)
+
+    # save vectors and models
+    # joblib.dump(tf_vectorizer, 'models/hard_vectorizer.pkl')
+    # joblib.dump(pca, 'models/pca.pkl')
+    # joblib.dump(km, 'models/km.pkl')

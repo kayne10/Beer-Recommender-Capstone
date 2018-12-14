@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Beer Recommender</title>
-  </head>
-  <body>
+{% extends 'base.html' %}
+{% block body %}
     <h1>Welcome</h1>
     <br>
     <hr>
     <br>
-    <form class="" action="/api/predict" method="post">
+    <form class="" action="/recommend" method="post">
       <label for="beer_name">Favorite Beer: </label>
       <input type="text" name="beer_name">
 
@@ -19,7 +14,7 @@
       <select class="" name="style">
         <option value="IPA">IPA</option>
         <option value="APA">APA</option>
-        <option value="Stout">Stout</option>
+        <option value="Stout">Porter/Stout</option>
         <option value="Pilsner">Pilsner</option>
         <option value="Cider">Cider</option>
         <option value="Golden/Blonde">Golden/Blonde</option>
@@ -28,15 +23,13 @@
       <br>
 
       <label for="abv">ABV of beer: </label>
-      <input type="number" name="abv">
+      <input type="number" step="0.01" name="abv">
 
       <br>
-      
+
       <label for="ibu">IBU of beer: </label>
       <input type="number" name="ibu">
       <br>
       <input type="submit">
     </form>
-
-  </body>
-</html>
+{% endblock %}

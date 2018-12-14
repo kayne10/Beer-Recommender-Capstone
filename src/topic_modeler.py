@@ -198,8 +198,8 @@ def main():
     # A grid search across many values yielded these values for optimizing log loss:
     # {'doc_topic_prior': 0.25, 'n_components': 5, 'topic_word_prior': 0.5}
 
-    # tm.save_vectorizer('vectorizer.pkl')
-    # tm.save_model('model.pkl')
+    tm.save_vectorizer('../models/soft_vectorizer.pkl')
+    tm.save_model('../models/lda.pkl')
 
 if __name__ == '__main__':
     main()

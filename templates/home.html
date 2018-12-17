@@ -18,7 +18,11 @@
     </div>
     </section>
     <section class="option1" id="Classify">
-
+      <form class="" action="/predict" method="post" enctype="multipart/form-data">
+        <label for="beer_image">Upload a photo of beer</label>
+        <input type="file" name="beer_image" value="">
+        <button type="submit" class="btn btn-primary">Submit!</button>
+      </form>
     </section>
     <section class="option2" id="Recommend">
       <form class="" action="/recommend" method="post">

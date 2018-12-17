@@ -101,4 +101,4 @@ if __name__ == '__main__':
     #metrics = best_model.evaluate_generator(holdout_generator, steps=20)
     metrics =  model.evaluate_generator(holdout_generator, steps=20)
     print("loss: {}, accuracy: {}".format(metrics[0],metrics[1]))
-    plot_model(model,to_file='../images/cnn_arch.png')
+    # plot_model(model,to_file='../images/cnn_arch.png')

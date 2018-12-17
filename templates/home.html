@@ -1,35 +1,54 @@
 {% extends 'base.html' %}
 {% block body %}
+  <div class="jumbotron">
     <h1>Welcome</h1>
+  </div>
     <br>
     <hr>
     <br>
-    <form class="" action="/recommend" method="post">
-      <label for="beer_name">Favorite Beer: </label>
-      <input type="text" name="beer_name">
+    <section class="about" id="About">
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Classify</h2>
+        </div>
+        <div class="col-md-6">
+          <h2>Recommend</h2>
+        </div>
+      </div>
+    </div>
+    </section>
+    <section class="option1" id="Classify">
 
-      <br>
+    </section>
+    <section class="option2" id="Recommend">
+      <form class="" action="/recommend" method="post">
+        <div class="form-group">
+          <label for="beer_name">Beer Name</label>
+          <input type="text" class="form-control" id="beer_name" name="beer_name" placeholder="Your favorite beer goes here">
+        </div>
+        <br>
 
-      <label for="style">Choose the style of beer</label>
-      <select class="" name="style">
-        <option value="IPA">IPA</option>
-        <option value="APA">APA</option>
-        <option value="Stout">Porter/Stout</option>
-        <option value="Pilsner">Pilsner</option>
-        <option value="Cider">Cider</option>
-        <option value="Golden/Blonde">Golden/Blonde</option>
-      </select>
+        <label for="style">Choose the style of beer</label>
+        <select class="" name="style">
+          <option value="IPA">IPA</option>
+          <option value="APA">APA</option>
+          <option value="Stout">Porter/Stout</option>
+          <option value="Pilsner">Pilsner</option>
+          <option value="Cider">Cider</option>
+          <option value="Golden/Blonde">Golden/Blonde</option>
+        </select>
 
-      <br>
+        <br>
 
-      <label for="abv">ABV of beer: </label>
-      <input type="number" step="0.01" name="abv">
+        <label for="abv">ABV of beer: </label>
+        <input type="number" step="0.01" name="abv">
 
-      <br>
+        <br>
 
-      <label for="ibu">IBU of beer: </label>
-      <input type="number" name="ibu">
-      <br>
-      <input type="submit">
-    </form>
+        <label for="ibu">IBU of beer: </label>
+        <input type="number" name="ibu">
+        <br>
+        <input type="submit">
+      </form>
+    </section>
 {% endblock %}

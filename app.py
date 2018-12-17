@@ -4,9 +4,11 @@ import pandas as pd
 import numpy as np
 from src.topic_modeler import TopicModeler, load_data
 from src.hard_clustering import recommend_beer, find_closest_beer_names, no_number_preprocessor
+import PIL
+from PIL import Image
+from keras.models import load_model
 
-
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 @app.route('/', methods=['GET'])
 def home():
@@ -17,6 +19,17 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     """Route that predicts image upload"""
+    image = request.files['file']
+    image = Image.open(image)
+    image = np.asarray(image.resize((28,28))) # size that matches input for model
+    image = image.reshape(1,1,28,28) # reshape
+
+    # Use the loaded model to generate a prediction.
+    pred = model.predict(image)
+
+    # Prepare and send the response.
+    digit = np.argmax(pred)
+    prediction = {'digit':int(digit)}
     pass
 
 

@@ -8,9 +8,9 @@ from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS, CountVectorizer
 from sklearn.metrics.pairwise import cosine_distances, euclidean_distances
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.cluster import KMeans
-from sklearn.decomposition import RandomizedPCA, PCA
+from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import seaborn as sns
 from src.topic_modeler import load_data, handle_input
 
@@ -57,7 +57,7 @@ def recommend_beer(user_input, df, vectorizer, dim_reducer, model):
 
     distances = cosine_distances(input_vector, all_doc_vectors)
     sorted_indices = np.argsort(distances)
-    return find_closest_beer_names(user_input['beer_name'],df,sorted_indices,15)
+    return find_closest_beer_names(user_input['beer_name'],df,sorted_indices,5)
 
 def plot_elbow(km,X):
     Sum_of_squared_distances = []
@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
     tf_vectorizer = CountVectorizer(max_df=0.85, min_df=2, max_features=1000,
                                     preprocessor=no_number_preprocessor, stop_words=stop_words)
-    pca = RandomizedPCA(n_components=20, whiten=True)
+    pca = PCA(n_components=20, whiten=True)
     n_clusters = 7
     km = KMeans(n_clusters=n_clusters)
 

@@ -7,7 +7,7 @@ from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS, CountVectorizer
 from sklearn.metrics.pairwise import cosine_distances, euclidean_distances
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.cluster import KMeans
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 # pd.options.display.max_columns = 30
 

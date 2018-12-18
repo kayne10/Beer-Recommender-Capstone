@@ -35,7 +35,7 @@ def find_closest_beer_names(target_beer, df, sorted_indices, num_documents=10):
     # }
     return df[df['beer_name'].isin(name_array.tolist())]
 
-def recommend_beer(user_input, df, vectorizer, dim_reducer, model):
+def recommend_beer(user_input, df, vectorizer, dim_reducer, model, num_docs):
     text = user_input['beer_name'] + ' ' + user_input['style']
     all_text = df['beer_name'] + ' ' + df['style']
 
@@ -57,7 +57,7 @@ def recommend_beer(user_input, df, vectorizer, dim_reducer, model):
 
     distances = cosine_distances(input_vector, all_doc_vectors)
     sorted_indices = np.argsort(distances)
-    return find_closest_beer_names(user_input['beer_name'],df,sorted_indices,5)
+    return find_closest_beer_names(user_input['beer_name'],df,sorted_indices,num_docs)
 
 def plot_elbow(km,X):
     Sum_of_squared_distances = []
@@ -126,7 +126,7 @@ if __name__ == '__main__':
     summarized_results = results.groupby('category').agg({'abv':'mean','ibu':'mean'})
 
     user_preference = handle_input('Voodoo Ranger Imperial IPA','Imperial IPA',0.09,70.0)
-    recs = recommend_beer(user_preference,df,tf_vectorizer,pca,km)
+    recs = recommend_beer(user_preference,df,tf_vectorizer,pca,km,15)
     print(recs)
 
     # save vectors and models

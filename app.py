@@ -32,8 +32,9 @@ def predict():
 
     # Prepare and send the response.
     label = np.argmax(pred)
-    prediction = {'label':label}
-    return jsonify(prediction)
+    prediction = {'label':int(label)}
+    # return jsonify(prediction)
+    return render_template('predict.html',prediction=prediction) #render uploaded file too
 
 
 @app.route('/recommend', methods=['POST'])
@@ -42,7 +43,8 @@ def recommend():
     # user_preference = request.json # for postman testing
     user_preference = request.form.to_dict(flat=True)
     user_preference['abv'] = float(user_preference['abv']) * 0.01
-    prediction = recommend_beer(user_preference,df,vectorizer,pca,km)
+    num_documents = int(user_preference['num_docs'])
+    prediction = recommend_beer(user_preference,df,vectorizer,pca,km,num_documents)
     # return jsonify(prediction.to_dict()) # testing json response
     temp = prediction.sort_values('brewery_name').to_dict('records')
     rec_output = []
@@ -74,6 +76,7 @@ if __name__ == '__main__':
     vectorizer = joblib.load('models/hard_vectorizer.pkl')
     pca = joblib.load('models/pca.pkl')
     km = joblib.load('models/km.pkl')
-    model = load_model('models/cnn.h5')
+    model = load_model('models/classifier.h5')
+    model._make_predict_function()
     df = load_data()
     app.run(host='0.0.0.0',port=8080,debug=True)

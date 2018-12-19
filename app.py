@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, send_file
 from sklearn.externals import joblib
 import pandas as pd
 import numpy as np
@@ -9,7 +9,16 @@ from PIL import Image
 from keras.models import load_model
 from keras.preprocessing import image
 
+
+
 app = Flask(__name__, static_url_path='/static')
+
+# def serve_pil_image(pil_img):
+#     img_io = StringIO()
+#     pil_img.save(img_io, 'JPEG', quality=70)
+#     img_io.seek(0)
+#     return send_file(img_io, mimetype='image/jpeg')
+
 
 @app.route('/', methods=['GET'])
 def home():
@@ -79,4 +88,5 @@ if __name__ == '__main__':
     model = load_model('models/classifier.h5')
     model._make_predict_function()
     df = load_data()
-    app.run(host='0.0.0.0',port=8080,debug=True)
+    # app.run(host='0.0.0.0',port=8080,debug=True)
+    app.run(host='0.0.0.0',port=8080)

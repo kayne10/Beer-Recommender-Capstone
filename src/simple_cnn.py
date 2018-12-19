@@ -84,7 +84,7 @@ if __name__ == '__main__':
                                                             batch_size=batch_size)
     model = create_model(img_size,7)
 
-    # mcCallBack = ModelCheckpoint(filepath='./logs',save_best_only=True)
+    # mcCallBack = ModelCheckpoint(filepath='./logs',monitor="val_loss",save_best_only=True)
     tbCallBack = TensorBoard(log_dir='../logs',
                             histogram_freq=0,
                             write_graph=True,

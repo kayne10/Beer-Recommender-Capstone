@@ -1,0 +1,25 @@
+html {
+  background: url('../img/beer-cheers.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+body {
+  margin: 0 auto;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0.5);
+  width: auto;
+  font-family: 'Anton', sans-serif;
+  padding-bottom: 3em;
+}
+
+.table {
+  /* font-family: 'Bitter', serif; */
+  font-family: 'Oswald', sans-serif;
+}
+
+.table thead {
+  font-style: bold;
+}

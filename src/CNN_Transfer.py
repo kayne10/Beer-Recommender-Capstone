@@ -336,12 +336,12 @@ if __name__ == '__main__':
     img_size = (200,200,3)
     target_size = (img_size[0],img_size[1])
     batch_size = 16
-    num_epochs = 25
+    num_epochs = 20
 
     #xception
     model_name = Xception
     warmup_epochs = 5
-    optimizers = [Adam(lr=0.0006), Adam(lr=0.0001)] # keep learning rates low to keep from wrecking weights
+    optimizers = [RMSprop(lr=0.0006), RMSprop(lr=0.0001)] # keep learning rates low to keep from wrecking weights
     train_head_idx = [132, 126]
     transfer_model = create_transfer_model
     transfer_cnn = TransferCNN('transfer_test_one', target_size, channels=3, augmentation_strength=0.25, preprocessing=None, batch_size=50, scale=255)

@@ -2,8 +2,8 @@
 {% block body %}
   <div class="container classify-body">
     <!-- Show image that was uploaded  -->
+    <!-- <img src="{{output}}" alt="did not work"> -->
     <!-- If statement for a or an -->
-    <img src="{{output}}" alt="did not work">
     <h1>Your beer is classified as
       {% if prediction["label"] == 0 %}
         <strong>APA!</strong>

@@ -107,7 +107,7 @@ if __name__ == '__main__':
     vectorizer = joblib.load('models/hard_vectorizer.pkl')
     pca = joblib.load('models/pca.pkl')
     km = joblib.load('models/km.pkl')
-    model = load_model('models/transfer_test_one.hdf5')
+    model = load_model('models/transfer_test_two.hdf5')
     model._make_predict_function()
     df = load_data()
     dest = config['S3']['BUCKET_NAME']

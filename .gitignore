@@ -6,3 +6,5 @@ logs
 poster_36x48.pptx
 *.pdf
 *.h5
+*.hdf5
+config.ini

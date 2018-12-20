@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template, send_file
+from flask import Flask, jsonify, request, render_template, send_file, redirect
 from sklearn.externals import joblib
 import pandas as pd
 import numpy as np
@@ -8,16 +8,40 @@ import PIL
 from PIL import Image
 from keras.models import load_model
 from keras.preprocessing import image
+import boto3
+import configparser
 
+config = configparser.ConfigParser()
+config.read('src/config.ini')
+
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=config['S3']['ACCESS_KEY_ID'],
+    aws_secret_access_key=config['S3']['SECRET_ACCESS_KEY']
+)
+
+def upload_file_to_s3(file, dest, acl="public-read"):
+
+    try:
+
+        s3.upload_fileobj(
+            file,
+            dest,
+            'capstone/uploads/{}'.format(file.filename),
+            ExtraArgs={
+                "ACL": acl,
+                "ContentType": file.content_type
+            }
+        )
+        return file.filename
+
+    except Exception as e:
+        # This is a catch all exception, edit this part to fit your needs.
+        print("Something Happened: ", e)
+        return e
 
 
 app = Flask(__name__, static_url_path='/static')
-
-# def serve_pil_image(pil_img):
-#     img_io = StringIO()
-#     pil_img.save(img_io, 'JPEG', quality=70)
-#     img_io.seek(0)
-#     return send_file(img_io, mimetype='image/jpeg')
 
 
 @app.route('/', methods=['GET'])
@@ -30,20 +54,18 @@ def home():
 def predict():
     """Route that predicts image upload"""
     img = request.files['beer_image']
-    # img = Image.open(img)
-    # img = np.asarray(img.resize((200,200))) # size that matches input for model
-    # img = np.reshape(img,[1,200,200,3]) # reshape
     img = image.load_img(img, target_size=(200,200))
     img_tensor = image.img_to_array(img)
     img_tensor = np.expand_dims(img_tensor, axis=0)
     # Use the loaded model to generate a prediction.
     pred = model.predict(img_tensor)
-
-    # Prepare and send the response.
     label = np.argmax(pred)
     prediction = {'label':int(label)}
+    #Upload to S3 for future training
+    img = request.files['beer_image']
+    output = upload_file_to_s3(img,dest,acl="public-read")
     # return jsonify(prediction)
-    return render_template('predict.html',prediction=prediction) #render uploaded file too
+    return render_template('predict.html',prediction=prediction,upload=output) #render uploaded file too
 
 
 @app.route('/recommend', methods=['POST'])
@@ -73,7 +95,7 @@ def recommend():
     target = {
         'beer_name':user_preference['beer_name'],
         'style':user_preference['style'],
-        'abv':user_preference['abv'] * 100,
+        'abv':round(user_preference['abv'] * 100,1),
         'ibu':user_preference['ibu']
     }
     return render_template('recommend.html',
@@ -85,8 +107,9 @@ if __name__ == '__main__':
     vectorizer = joblib.load('models/hard_vectorizer.pkl')
     pca = joblib.load('models/pca.pkl')
     km = joblib.load('models/km.pkl')
-    model = load_model('models/classifier.h5')
+    model = load_model('models/transfer_test_one.hdf5')
     model._make_predict_function()
     df = load_data()
-    # app.run(host='0.0.0.0',port=8080,debug=True)
-    app.run(host='0.0.0.0',port=8080)
+    dest = config['S3']['BUCKET_NAME']
+    app.run(host='0.0.0.0',port=8080,debug=True)
+    # app.run(host='0.0.0.0',port=8080)

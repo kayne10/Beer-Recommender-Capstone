@@ -20,14 +20,14 @@ s3 = boto3.client(
     aws_secret_access_key=config['S3']['SECRET_ACCESS_KEY']
 )
 
-def upload_file_to_s3(file, dest, acl="public-read"):
+def upload_file_to_s3(file, dest, tag, acl="public-read"):
 
     try:
 
         s3.upload_fileobj(
             file,
             dest,
-            'capstone/uploads/{}'.format(file.filename),
+            'capstone/uploads/{}{}'.format(tag,file.filename),
             ExtraArgs={
                 "ACL": acl,
                 "ContentType": file.content_type
@@ -61,11 +61,16 @@ def predict():
     pred = model.predict(img_tensor)
     label = np.argmax(pred)
     prediction = {'label':int(label)}
+    reference = {'APA':0,'Golden/Blonde':1,'Cider':2,'Hazy IPA':3,'Lager':4,'Stout':5,'IPA':6}
+    for key, value in reference.items():
+         if value == prediction["label"]:
+             guess = key
     #Upload to S3 for future training
     img = request.files['beer_image']
-    output = upload_file_to_s3(img,dest,acl="public-read")
+    tag = request.form['tag']
+    filename = upload_file_to_s3(img,dest,tag,acl="public-read")
     # return jsonify(prediction)
-    return render_template('predict.html',prediction=prediction,upload=output) #render uploaded file too
+    return render_template('predict.html',prediction=guess,tag=tag) #render uploaded file too
 
 
 @app.route('/recommend', methods=['POST'])
@@ -107,7 +112,8 @@ if __name__ == '__main__':
     vectorizer = joblib.load('models/hard_vectorizer.pkl')
     pca = joblib.load('models/pca.pkl')
     km = joblib.load('models/km.pkl')
-    model = load_model('models/transfer_test_two.hdf5')
+    # model = load_model('models/transfer_test_two.hdf5') # more accuracy
+    model = load_model('models/classifier.h5')
     model._make_predict_function()
     df = load_data()
     dest = config['S3']['BUCKET_NAME']

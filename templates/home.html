@@ -35,19 +35,34 @@
     <hr>
     <section class="option" id="Classify">
       <center>
-        <img src="/static/img/example_upload.jpg" height="300" alt="">
+        <img src="/static/img/example_upload.jpg" height="250" alt="">
       </center>
       <p>Example of what you should upload</p>
-      <form class="col-md-6 col-md-offset-3 info" action="/predict" method="post" enctype="multipart/form-data">
+      <form class="col-md-6 col-md-offset-3 info" action="/predict" method="post" enctype="multipart/form-data" runat="server">
         <label for="beer_image">Upload a photo of your beer in a pint glass</label>
-        <input type="file" name="beer_image" id="imagePreview" value="" required>
-        <img src="#" id="bla" alt="">
+        <input type="file" name="beer_image" accept="image/*" capture="camera" id="imagePreview" required>
+        <img src="" id="blah" width="100" alt="">
+        <div class="form-group col-md-3">
+          <label for="tag">Tag its true style</label>
+          <select class="form-control" name="tag" required>
+            <option value="IPA">IPA</option>
+            <option value="Hazy IPA">Hazy IPA</option>
+            <option value="APA">APA</option>
+            <option value="Stout">Porter/Stout</option>
+            <option value="Lager">Lager</option>
+            <option value="Cider">Cider</option>
+            <option value="Blonde">Golden/Blonde</option>
+          </select>
+        </div>
         <button type="submit" class="btn btn-primary">Submit!</button>
       </form>
     </section>
     <hr>
     <section class="option" id="Recommend">
       <form class="col-md-6 col-md-offset-3 info" action="/recommend" method="post">
+        <p>
+          (In case you need to look up these details, visit <a target="_blank" href="https://www.ratebeer.com">here</a>)
+        </p>
         <div class="form-group">
           <label for="beer_name">Beer Name</label>
           <input type="text" class="form-control" id="beer_name" name="beer_name" placeholder="Your favorite beer goes here" required>

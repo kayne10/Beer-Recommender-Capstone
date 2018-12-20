@@ -2,23 +2,14 @@
 {% block body %}
   <div class="container classify-body">
     <!-- Show image that was uploaded  -->
-    <!-- <img src="{{output}}" alt="did not work"> -->
+    <!-- <img src="{{upload}}" alt="did not work"> -->
     <!-- If statement for a or an -->
     <h1>Your beer is classified as
-      {% if prediction["label"] == 0 %}
-        <strong>APA!</strong>
-      {% elif prediction["label"] == 1 %}
-        <strong>Blonde/Golden!</strong>
-      {% elif prediction["label"] == 2 %}
-        <strong>Cider!</strong>
-      {% elif prediction["label"] == 3 %}
-        <strong>Hazy IPA!</strong>
-      {% elif prediction["label"] == 4 %}
-        <strong>Lager!</strong>
-      {% elif prediction["label"] == 5 %}
-        <strong>Stout/Porter!</strong>
-      {% else  %}
-        <strong>IPA!</strong>
+      {{prediction}}
+      {% if prediction == tag %}
+        <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+      {% else %}
+        <i class="fa fa-thumbs-down" aria-hidden="true"></i>
       {% endif %}
      </h1>
     <br>
@@ -26,6 +17,9 @@
     <h3>Do you want recommendations too?</h3>
     <!-- form -->
     <form class="col-md-6 col-md-offset-3 info" action="/recommend" method="post">
+      <p>
+        (In case you need to look up these details, visit <a target="_blank" href="https://www.ratebeer.com">here</a>)
+      </p>
       <div class="form-group">
         <label for="beer_name">Beer Name</label>
         <input type="text" class="form-control" id="beer_name" name="beer_name" placeholder="Your favorite beer goes here" required>
